@@ -18,6 +18,3 @@ This script was created and tested with:
 - dplyr 1.1.0
 - tidyr 1.3
 - ggplot 3.4.1
-
-
-## Data
