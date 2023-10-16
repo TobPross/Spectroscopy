@@ -78,3 +78,18 @@ Run the optimization without the "%dopar% {.}" to manually observe the calibrati
 ## Bad Validation Results
 Typically, the validation R2 is slightly worse than the calibration R2. A difference of 0.05 to 0.1 is normal, a 0.2 difference is concerning (for example R2_cal=0.85; R2_val=0.65). If there is a big discrepancy between these values, this is a sign that the model is overfitted. In this case you should have a look in the 'finalMatrix' if there is a model on position 2, 3, 4 etc. that has a better R2_Cal to R2_Val ratio, this might a better choice even if the RMSE is worse. Furthermore you should analyse the test-set. Are all species in calibration and validation set? Are the values evenly distributed? Consider increasing the number of validation samples. Consider using a different algorithm for sample selection.
 
+## Bad model performance
+If the finished prediction model performs badly when applied to other spectral data (for example if the model predicts values that are far outside the calibration range, including negative values), this can have several reasons. If this happens for a few samples this could be due to sensor alignment or it being an exotic sample. If this happens for most or all samples it could be due to spectral noise or model overfitting.
+
+-	Sensor alignment: 
+Manually check the spectral data of the outliers. If the spectra of the outliers look vastly different than the other spectra (for example an offset of the whole spectral baseline), there might have been a problem when the spectra were recorded. This can potentially occur when the sample is not aligned with the instrument sensor when recording, i.e. the sample was not fully inserted in the sample chamber or the instrument sensor was not fully pressed on the sample. In this case, repeat the measurement, if the sample is still available – if not it might be better to discard this sample.
+
+-	Spectral noise / atmospheric noise: 
+Manually check if the spectra contain noisy regions, especially around 1950nm, 1450nm, 1200nm and 970nm. This would be a sign of spectral noise and could be fixed by modifying the wavesequence the exclude the noisy regions.
+
+-	Model overfitted: 
+Check if the mustiscans of each sample perform similar. Most instruments record multiple spectra for each sample (multiscans). It is recommended to apply the prediction model to each of the scans. The prediction model should predict a very similar value for all scans of the same sample. If this is not the case, this is a good indicator that the model is overfitted. In this case, consider to use a different model form the “finalMatrix” i. e.  “optimal_model = 2” etc.
+
+-	Exotic sample: 
+The sample could be outside of the calibration range: Is the sample from a different species than the majority of the calibration and validation dataset? Was a special treatment applied only to this sample (fertilizer, herbicide, etc.)? Was the sample especially young or old, compared to the other samples? Was the sample damaged by herbivores etc?
+In any of these cases it would be best practice to analyse the sample with your reference method and include it in the calibration dataset.
